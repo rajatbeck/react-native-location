@@ -1,0 +1,5 @@
+rootProject.name = 'EnableServiceLocator'
+
+include ':app'
+include ':react-native-location-switch'
+project(':react-native-location-switch').projectDir = new File(settingsDir, '../node_modules/reac-native-location-switch/android')
