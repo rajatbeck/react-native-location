@@ -6,7 +6,7 @@ import {Platform, PermissionsAndroid, Linking, NativeModules, DeviceEventEmitter
 const config = {
     timeout: 1000,
     enableHighAccuracy: true
-}
+};
 
 export function initialPermissionCheck() {
 
@@ -51,18 +51,22 @@ export function askPermission() {
     if (Platform.OS === "android") {
         PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
             .then((permissionStatus) => {
-                    console.warn(permissionStatus)
-                if(permissionStatus) {
-                    navigator.geolocation.getCurrentPosition(
+            //added check so that both the location and dialogs are opened
+                NativeModules.OpenSettings.isLocationEnabled(
                         () => {
+                            if(!permissionStatus){
+                                NativeModules.OpenSettins.openAppLocationSetting();
+                            }
                         },
                         () => {
-                            NativeModules.OpenSettings.openSetting();
-                        },
-                        config)
-                }else{
-                    NativeModules.OpenSettings.open();
-                }
+                            if(permissionStatus) {
+                                NativeModules.OpenSettings.openGpsSettings();
+                            }else{
+                                NativeModules.OpenSettings.openAppLocationSetting();
+                                NativeModules.OpenSettings.openGpsSettings();
+                            }
+                        })
+
             })
     } else {
         Linking.openURL('app-settings:');

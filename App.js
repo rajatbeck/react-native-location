@@ -75,6 +75,7 @@ export default class App extends Component<Props> {
 
     componentWillUnmount() {
         AppState.removeEventListener(APP_STATE_HANDLER_NAME, this._handleAppStateChange);
+        NodeModules.OpenSettings._stopListen()
     }
 
     _handleAppStateChange = (nextAppState) => {
